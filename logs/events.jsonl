@@ -82,3 +82,5 @@
 {"timestamp": "2026-10-13T18:40:58.527+00:00", "type": "MODE_CHANGE", "message": "Mode changed GUARD -> SAFE", "event_id": "ce838e4b-69f8-465b-8a50-15efc39b7ef7", "old_mode": "GUARD", "new_mode": "SAFE", "source": "flutter_app"}
 {"timestamp": "2026-10-13T18:42:40.103+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
 {"timestamp": "2026-10-13T18:44:12.351+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-13T19:26:16.878+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-13T19:34:16.852+00:00", "type": "SYSTEM", "message": "System stopped"}
