@@ -15,6 +15,7 @@ class LocalEngineBridge:
         self._frame_number = 0
         self._closed = False
         self._mode_request: Optional[str] = None
+        self._shutdown_requested = False
         self._status: dict[str, Any] = {
             "camera_connected": False,
             "mode": "SAFE",
@@ -79,6 +80,15 @@ class LocalEngineBridge:
         with self._condition:
             mode, self._mode_request = self._mode_request, None
             return mode
+
+    def request_shutdown(self) -> None:
+        with self._condition:
+            self._shutdown_requested = True
+
+    def take_shutdown_request(self) -> bool:
+        with self._condition:
+            requested, self._shutdown_requested = self._shutdown_requested, False
+            return requested
 
     def wait_for_frame(self, after_frame: int) -> tuple[Optional[int], Optional[bytes]]:
         with self._condition:
@@ -191,6 +201,16 @@ class LocalEngineServer:
             def do_POST(self) -> None:
                 if self._allowed_origin() == "":
                     self.send_error(403, "Only localhost origins are allowed")
+                    return
+                if self.path == "/api/shutdown":
+                    bridge.request_shutdown()
+                    response = json.dumps({"status": "shutdown_requested"}).encode()
+                    self.send_response(202)
+                    self._cors_headers()
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(response)))
+                    self.end_headers()
+                    self.wfile.write(response)
                     return
                 if self.path != "/api/mode":
                     self.send_error(404, "Not found")

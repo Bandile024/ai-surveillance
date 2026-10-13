@@ -25,9 +25,29 @@ cd ai-surveillance
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
-python main.py
 ```
 > If activation is blocked: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+Once the Python and Flutter prerequisites are installed and configured, start
+the whole local system—AI engine plus Flutter app in Chrome—from the project
+root with:
+
+```powershell
+.\run_sentinel.ps1
+```
+
+The launcher reads `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` from the root
+`.env.local`, starts the camera engine, and opens Flutter in parallel while the
+engine loads. It resolves Flutter packages only on first setup or after
+`pubspec.yaml`/`pubspec.lock` changes. Add the publishable key to that ignored
+local file if it is not already there. Keep using the Supabase **publishable**
+key; never use the `service_role` key in the app. Closing `flutter run` also
+requests a clean engine shutdown. If PowerShell blocks the script due to
+execution policy, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_sentinel.ps1
+```
 
 ### macOS / Linux
 ```bash
