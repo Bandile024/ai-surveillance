@@ -139,3 +139,11 @@
 2026-10-13 21:26:12,775 | INFO    | Local app API listening at http://127.0.0.1:8765
 2026-10-13 21:26:16,878 | INFO    | [SYSTEM] System started in SAFE mode
 2026-10-13 21:34:16,853 | INFO    | [SYSTEM] System stopped
+2026-10-13 22:59:43,111 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-13 22:59:46,934 | INFO    | Supabase event delivery enabled.
+2026-10-13 22:59:46,974 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-13 22:59:51,653 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-13 23:12:10,653 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-13 23:12:13,963 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 86%
+2026-10-13 23:12:18,385 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-13 23:21:13,707 | INFO    | [SYSTEM] System stopped
