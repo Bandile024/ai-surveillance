@@ -21,18 +21,38 @@ and snapshots from the private `intrusion-snapshots` bucket.
    API**. Supply both at runtime; do not commit project credentials or use the
    `service_role` key in the app.
 
-## Run
+## Run the app and engine together (Windows)
 
-From the `sentinel_ai` directory in PowerShell:
+After setting up the Python environment and Flutter SDK, add `SUPABASE_URL` and
+`SUPABASE_PUBLISHABLE_KEY` to the root `.env.local` file. Then, from the project
+root in PowerShell, run:
+
+```powershell
+.\run_sentinel.ps1
+```
+
+The launcher resolves Flutter dependencies only on first setup or after
+dependency manifest changes, then starts the Python engine and opens the app
+in Chrome while the engine model loads. The feed appears when the engine is
+ready. Close the `flutter run` session to stop both. If PowerShell blocks
+script execution, use:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_sentinel.ps1
+```
+
+The URL must be the Supabase project's full URL. Use the publishable key, not
+the `service_role` key. The app can also be run separately with the Flutter
+commands below.
+
+## Run Flutter separately
+
+From the `sentinel_ai` directory:
 
 ```powershell
 flutter pub get
-flutter run --dart-define=SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
+flutter run -d chrome --dart-define=SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
 ```
-
-Replace both placeholders. The URL must be the new project's full URL. If the
-app opens with setup instructions, one or both `--dart-define` values were not
-provided.
 
 The project includes the Flutter web entry point. To run in Chrome:
 
@@ -48,8 +68,9 @@ Redirect URLs** in the Supabase dashboard.
 ## Local live camera
 
 The Home and live-camera screens display the annotated stream produced by the
-Python YOLO engine; Flutter does not open a second webcam. Start the engine on
-the same computer before launching the app:
+Python YOLO engine; Flutter does not open a second webcam. When starting the
+components separately, start the engine on the same computer before launching
+the app:
 
 ```powershell
 cd ..

@@ -77,6 +77,14 @@ class LocalEngineApiTests(unittest.TestCase):
         )
         self.assertEqual(status, 400)
 
+    def test_local_shutdown_request_is_accepted(self) -> None:
+        status, response = self._request("POST", "/api/shutdown")
+
+        self.assertEqual(status, 202)
+        self.assertEqual(json.loads(response), {"status": "shutdown_requested"})
+        self.assertTrue(self.bridge.take_shutdown_request())
+        self.assertFalse(self.bridge.take_shutdown_request())
+
     def test_non_local_browser_origin_is_rejected(self) -> None:
         connection = http.client.HTTPConnection("127.0.0.1", self.server.port)
         connection.request(

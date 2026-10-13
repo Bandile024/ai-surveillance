@@ -172,6 +172,8 @@ class SurveillanceApp:
                 cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
 
             while True:
+                if bridge.take_shutdown_request():
+                    break
                 ok, frame = cap.read()
                 if not ok:
                     failures += 1

@@ -76,3 +76,9 @@
 {"timestamp": "2026-10-13T09:24:12.204+00:00", "type": "MODE_CHANGE", "message": "Mode changed SAFE -> GUARD", "event_id": "e3004065-1931-45c6-b46d-55bced2e63f2", "old_mode": "SAFE", "new_mode": "GUARD", "source": "flutter_app"}
 {"timestamp": "2026-10-13T09:24:23.591+00:00", "type": "INTRUSION", "message": "Intrusion detected: 1 person(s), confidence 92%", "alert_id": "a3c5a72c-1327-43fe-b34d-29c0535381e1", "person_count": 1, "max_confidence": 0.919, "snapshot": "C:\\Users\\BandileNgwenya\\PycharmProjects\\ai-surveillance\\intrusions\\intrusion_20261013_112423_457.jpg"}
 {"timestamp": "2026-10-13T09:24:36.656+00:00", "type": "MODE_CHANGE", "message": "Mode changed GUARD -> SAFE", "event_id": "5e64abc9-e0eb-4fc6-b156-065f2b5e68f4", "old_mode": "GUARD", "new_mode": "SAFE", "source": "flutter_app"}
+{"timestamp": "2026-10-13T18:35:12.390+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-13T18:40:47.941+00:00", "type": "MODE_CHANGE", "message": "Mode changed SAFE -> GUARD", "event_id": "0f4ddb1d-15ca-4c34-b046-5e9ca91a8781", "old_mode": "SAFE", "new_mode": "GUARD", "source": "flutter_app"}
+{"timestamp": "2026-10-13T18:40:51.188+00:00", "type": "INTRUSION", "message": "Intrusion detected: 1 person(s), confidence 90%", "alert_id": "d519b39e-8f51-42b9-bebd-7971e02ab918", "person_count": 1, "max_confidence": 0.903, "snapshot": "C:\\Users\\BandileNgwenya\\PycharmProjects\\ai-surveillance\\intrusions\\intrusion_20261013_204051_023.jpg"}
+{"timestamp": "2026-10-13T18:40:58.527+00:00", "type": "MODE_CHANGE", "message": "Mode changed GUARD -> SAFE", "event_id": "ce838e4b-69f8-465b-8a50-15efc39b7ef7", "old_mode": "GUARD", "new_mode": "SAFE", "source": "flutter_app"}
+{"timestamp": "2026-10-13T18:42:40.103+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-13T18:44:12.351+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
