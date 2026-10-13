@@ -1,0 +1,121 @@
+2026-10-08 16:53:40,626 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 16:53:49,643 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 16:56:00,955 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-08 16:56:09,777 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 92%
+2026-10-08 16:56:19,065 | INFO    | [SYSTEM] System stopped
+2026-10-08 16:56:33,932 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 16:56:38,413 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 16:57:03,018 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-08 16:57:06,130 | WARNING | [INTRUSION] Intrusion detected: 3 person(s), confidence 95%
+2026-10-08 16:59:03,163 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 81%
+2026-10-08 16:59:21,990 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-08 17:02:04,411 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-08 17:02:14,950 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 79%
+2026-10-08 17:02:30,328 | WARNING | [INTRUSION] Intrusion detected: 0 person(s), confidence 0%
+2026-10-08 17:02:36,022 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 90%
+2026-10-08 17:02:44,412 | INFO    | [SYSTEM] System stopped
+2026-10-08 17:07:48,716 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 17:07:55,010 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 17:08:31,918 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-08 17:08:42,199 | WARNING | [INTRUSION] Intrusion detected: 2 person(s), confidence 62%
+2026-10-08 17:08:52,963 | INFO    | [SYSTEM] System stopped
+2026-10-08 17:09:18,327 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 17:09:22,760 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 17:13:27,395 | INFO    | [SYSTEM] System stopped
+2026-10-08 18:04:29,675 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 18:04:37,059 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 18:05:07,623 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-08 18:05:17,273 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 72%
+2026-10-08 18:05:27,312 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-08 18:06:02,835 | INFO    | [SYSTEM] System stopped
+2026-10-08 18:35:00,581 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 18:35:09,107 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 18:35:54,562 | INFO    | [SYSTEM] System stopped
+2026-10-08 20:06:34,849 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 20:06:40,881 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 20:07:49,860 | INFO    | [SYSTEM] System stopped
+2026-10-08 21:18:16,009 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-08 21:18:21,458 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-08 21:20:44,108 | INFO    | [SYSTEM] System stopped
+2026-10-09 08:51:33,616 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-09 08:51:49,171 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-09 08:52:59,505 | INFO    | [SYSTEM] System stopped
+2026-10-11 12:59:05,190 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 12:59:17,517 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 12:59:44,497 | INFO    | [SYSTEM] System stopped
+2026-10-11 13:42:50,189 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 13:42:52,683 | INFO    | Supabase event delivery enabled.
+2026-10-11 13:42:56,299 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 13:43:32,492 | INFO    | [SYSTEM] System stopped
+2026-10-11 13:49:34,050 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 13:49:35,501 | INFO    | Supabase event delivery enabled.
+2026-10-11 13:49:37,364 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 13:50:01,362 | INFO    | [SYSTEM] System stopped
+2026-10-11 13:53:49,269 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 13:53:51,567 | INFO    | Supabase event delivery enabled.
+2026-10-11 13:53:53,822 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 13:54:04,428 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 13:54:05,978 | ERROR   | Supabase delivery failed for event c1fb7b49-13f6-440e-a87b-e671b50c03eb; retrying in 2s: HTTP Error 401: Unauthorized
+2026-10-11 13:54:07,683 | WARNING | [INTRUSION] Intrusion detected: 2 person(s), confidence 88%
+2026-10-11 13:54:08,573 | ERROR   | Supabase delivery failed for event ac07f015-22c2-4194-91b6-436cc1ed67a0; retrying in 2s: HTTP Error 401: Unauthorized
+2026-10-11 13:54:09,251 | ERROR   | Supabase delivery failed for event c1fb7b49-13f6-440e-a87b-e671b50c03eb; retrying in 4s: HTTP Error 401: Unauthorized
+2026-10-11 13:54:11,403 | ERROR   | Supabase delivery failed for event ac07f015-22c2-4194-91b6-436cc1ed67a0; retrying in 4s: HTTP Error 401: Unauthorized
+2026-10-11 13:54:13,751 | ERROR   | Supabase delivery failed for event c1fb7b49-13f6-440e-a87b-e671b50c03eb; retrying in 8s: HTTP Error 401: Unauthorized
+2026-10-11 13:54:15,374 | INFO    | [SYSTEM] System stopped
+2026-10-11 14:56:25,659 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 14:56:29,621 | INFO    | Supabase event delivery enabled.
+2026-10-11 14:56:33,313 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 14:58:05,754 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 14:58:16,608 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 56%
+2026-10-11 14:58:29,639 | INFO    | [SYSTEM] System stopped
+2026-10-11 19:02:15,023 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 19:02:20,199 | INFO    | Supabase event delivery enabled.
+2026-10-11 19:02:24,032 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 19:03:39,753 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 19:03:43,145 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 82%
+2026-10-11 19:05:04,921 | INFO    | [SYSTEM] System stopped
+2026-10-11 20:12:16,702 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 20:12:21,149 | INFO    | Supabase event delivery enabled.
+2026-10-11 20:12:21,156 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-11 20:12:24,662 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 20:24:49,113 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 20:24:52,408 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 87%
+2026-10-11 20:24:58,521 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-11 20:41:13,606 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-11 20:41:18,459 | INFO    | Supabase event delivery enabled.
+2026-10-11 20:41:18,505 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-11 20:41:21,843 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-11 20:51:39,051 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 20:51:42,231 | WARNING | [INTRUSION] Intrusion detected: 2 person(s), confidence 84%
+2026-10-11 20:51:53,073 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-11 23:21:20,484 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 23:21:38,183 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 57%
+2026-10-11 23:22:01,181 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-11 23:40:02,434 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-11 23:40:07,051 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-12 22:55:17,494 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-12 22:55:26,380 | INFO    | Supabase event delivery enabled.
+2026-10-12 22:55:26,473 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-12 22:55:30,871 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-12 23:04:39,351 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-12 23:04:41,701 | INFO    | Supabase event delivery enabled.
+2026-10-12 23:04:41,718 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-12 23:04:44,095 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-13 09:59:57,806 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-13 10:00:01,813 | INFO    | Supabase event delivery enabled.
+2026-10-13 10:00:01,850 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-13 10:00:05,068 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-13 10:00:10,170 | INFO    | [SYSTEM] System stopped
+2026-10-13 10:01:37,317 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-13 10:01:41,047 | INFO    | Supabase event delivery enabled.
+2026-10-13 10:01:41,092 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-13 10:01:43,875 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-13 10:23:04,760 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-13 10:23:34,968 | WARNING | [INTRUSION] Intrusion detected: 2 person(s), confidence 90%
+2026-10-13 10:28:03,031 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-13 10:30:07,506 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-13 10:30:23,433 | WARNING | [INTRUSION] Intrusion detected: 2 person(s), confidence 92%
+2026-10-13 10:31:50,600 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE
+2026-10-13 11:24:12,205 | INFO    | [MODE_CHANGE] Mode changed SAFE -> GUARD
+2026-10-13 11:24:23,591 | WARNING | [INTRUSION] Intrusion detected: 1 person(s), confidence 92%
+2026-10-13 11:24:36,656 | INFO    | [MODE_CHANGE] Mode changed GUARD -> SAFE

@@ -1,0 +1,2 @@
+[functions.device-ingest]
+verify_jwt = false

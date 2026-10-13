@@ -1,0 +1,5 @@
+.env
+.env.*
+logs/supabase-outbox.sqlite3
+logs/supabase-outbox.sqlite3-shm
+logs/supabase-outbox.sqlite3-wal

@@ -1,0 +1,9 @@
+{
+  "name": "Sentinel",
+  "short_name": "Sentinel",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a1012",
+  "theme_color": "#0a1012",
+  "description": "Sentinel security events dashboard."
+}
