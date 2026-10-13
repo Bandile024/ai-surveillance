@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/dashboard.dart';
@@ -18,36 +19,93 @@ Future<void> main() async {
   runApp(SentinelApp(client: client));
 }
 
-class SentinelApp extends StatelessWidget {
+class SentinelApp extends StatefulWidget {
   const SentinelApp({super.key, required this.client});
 
   final SupabaseClient? client;
 
   @override
+  State<SentinelApp> createState() => _SentinelAppState();
+}
+
+class _SentinelAppState extends State<SentinelApp> {
+  static const _darkModePreferenceKey = 'dark_mode_enabled';
+  bool _darkMode = false;
+  bool _themeChangedByUser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      if (!mounted || _themeChangedByUser) return;
+      setState(
+        () => _darkMode = preferences.getBool(_darkModePreferenceKey) ?? false,
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'sentinel theme preferences',
+          context: ErrorDescription('while loading the saved color theme'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _setDarkMode(bool enabled) async {
+    final previous = _darkMode;
+    _themeChangedByUser = true;
+    setState(() => _darkMode = enabled);
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final saved = await preferences.setBool(_darkModePreferenceKey, enabled);
+      if (!saved) {
+        throw StateError('Could not save the theme preference.');
+      }
+    } catch (_) {
+      if (mounted) setState(() => _darkMode = previous);
+      rethrow;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final brightness = _darkMode ? Brightness.dark : Brightness.light;
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF2488F5),
+      brightness: brightness,
+    );
     return MaterialApp(
       title: 'Sentinel',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2488F5),
-          brightness: Brightness.light,
-          surface: Colors.white,
-        ),
-        scaffoldBackgroundColor: Colors.white,
+        colorScheme: colorScheme,
+        scaffoldBackgroundColor: colorScheme.surface,
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFF8FAFC),
-          foregroundColor: Color(0xFF111827),
+        appBarTheme: AppBarTheme(
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
           surfaceTintColor: Colors.transparent,
         ),
-        inputDecorationTheme: const InputDecorationTheme(
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: colorScheme.surfaceContainerHighest,
           border: OutlineInputBorder(),
         ),
       ),
-      home: client == null
+      home: widget.client == null
           ? const SetupRequiredScreen()
-          : AuthenticationGate(client: client!),
+          : AuthenticationGate(
+              client: widget.client!,
+              darkMode: _darkMode,
+              onThemeChanged: _setDarkMode,
+            ),
     );
   }
 }
@@ -95,9 +153,16 @@ class SetupRequiredScreen extends StatelessWidget {
 }
 
 class AuthenticationGate extends StatelessWidget {
-  const AuthenticationGate({super.key, required this.client});
+  const AuthenticationGate({
+    super.key,
+    required this.client,
+    required this.darkMode,
+    required this.onThemeChanged,
+  });
 
   final SupabaseClient client;
+  final bool darkMode;
+  final Future<void> Function(bool enabled) onThemeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +184,11 @@ class AuthenticationGate extends StatelessWidget {
         if (session == null) {
           return SignInScreen(client: client);
         }
-        return EventsDashboard(client: client);
+        return EventsDashboard(
+          client: client,
+          darkMode: darkMode,
+          onThemeChanged: onThemeChanged,
+        );
       },
     );
   }
@@ -188,7 +257,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
@@ -217,8 +286,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 32),
                   Text(
                     _creatingAccount ? 'Create your account' : 'Welcome back',
-                    style: const TextStyle(
-                      color: Color(0xFF111827),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 34,
                       fontWeight: FontWeight.w800,
                       height: 1.15,
@@ -229,8 +298,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     _creatingAccount
                         ? 'Sign up to access your security control center.'
                         : 'Log in to your security control center.',
-                    style: const TextStyle(
-                      color: Color(0xFF64748B),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 16,
                       height: 1.45,
                     ),
@@ -240,8 +309,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _email,
-                    decoration: _authInputDecoration(),
-                    style: const TextStyle(color: Color(0xFF111827)),
+                    decoration: _authInputDecoration(context),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     autofillHints: const [AutofillHints.email],
                     validator: (value) => value == null || !value.contains('@')
@@ -253,7 +324,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _password,
-                    decoration: _authInputDecoration().copyWith(
+                    decoration: _authInputDecoration(context).copyWith(
                       suffixIcon: IconButton(
                         tooltip: _obscurePassword
                             ? 'Show password'
@@ -265,11 +336,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: const Color(0xFF64748B),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
-                    style: const TextStyle(color: Color(0xFF111827)),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     obscureText: _obscurePassword,
                     autofillHints: const [AutofillHints.password],
                     validator: (value) => value == null || value.length < 6
@@ -280,7 +353,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 14),
                     Text(
                       _error!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Color(0xFFB42318),
                         fontSize: 14,
                       ),
@@ -290,7 +363,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 14),
                     Text(
                       _notice!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Color(0xFF147D54),
                         fontSize: 14,
                       ),
@@ -358,8 +431,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     child: RichText(
                       text: TextSpan(
-                        style: const TextStyle(
-                          color: Color(0xFF64748B),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 15,
                         ),
                         children: [
@@ -398,8 +471,8 @@ class _AuthFieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: const TextStyle(
-        color: Color(0xFF111827),
+      style:       TextStyle(
+      color: Theme.of(context).colorScheme.onSurface,
         fontSize: 16,
         fontWeight: FontWeight.w600,
       ),
@@ -407,18 +480,19 @@ class _AuthFieldLabel extends StatelessWidget {
   }
 }
 
-InputDecoration _authInputDecoration() {
+InputDecoration _authInputDecoration(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
   return InputDecoration(
     filled: true,
-    fillColor: Colors.white,
+    fillColor: colors.surfaceContainerHighest,
     contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 19),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(color: Color(0xFFD7DEE7)),
+      borderSide: BorderSide(color: colors.outlineVariant),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(color: Color(0xFFD7DEE7)),
+      borderSide: BorderSide(color: colors.outlineVariant),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),

@@ -89,6 +89,8 @@ Flutter with `--dart-define=ENGINE_API_URL=http://127.0.0.1:PORT`.
 - Sign up or sign in with a Supabase email/password account.
 - Open the profile from the dashboard to view the signed-in account and its
   registered devices; sign out from the profile screen.
+- Switch between light and dark appearance from Profile → Appearance. The
+  selected theme is saved locally and restored the next time the app opens.
 - Push alert preferences are shown as unavailable until push delivery is
   configured.
 - Use the bottom navigation to switch between the overview, all events,

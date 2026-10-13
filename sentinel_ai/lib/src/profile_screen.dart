@@ -5,15 +5,20 @@ import 'device_record.dart';
 
 const _blue = Color(0xFF2488F5);
 const _blueDark = Color(0xFF2865E8);
-const _ink = Color(0xFF111827);
-const _muted = Color(0xFF64748B);
-const _border = Color(0xFFE2E8F0);
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key, required this.client, required this.devices});
+  const ProfileScreen({
+    super.key,
+    required this.client,
+    required this.devices,
+    required this.darkMode,
+    required this.onThemeChanged,
+  });
 
   final SupabaseClient client;
   final List<DeviceRecord> devices;
+  final bool darkMode;
+  final Future<void> Function(bool enabled) onThemeChanged;
 
   String get _email => client.auth.currentUser?.email ?? 'No email available';
 
@@ -54,6 +59,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
@@ -84,8 +90,8 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Text(
                       _displayName,
-                      style: const TextStyle(
-                        color: _ink,
+                      style: TextStyle(
+                        color: colors.onSurface,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -93,7 +99,10 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 5),
                     SelectableText(
                       _email,
-                      style: const TextStyle(color: _muted, fontSize: 15),
+                      style: TextStyle(
+                        color: colors.onSurfaceVariant,
+                        fontSize: 15,
+                      ),
                     ),
                   ],
                 ),
@@ -105,10 +114,10 @@ class ProfileScreen extends StatelessWidget {
         const _SectionTitle(icon: Icons.videocam_outlined, title: 'My Cameras'),
         const SizedBox(height: 10),
         if (devices.isEmpty)
-          const _ProfileCard(
+          _ProfileCard(
             child: Text(
               'No devices are linked to your account yet.',
-              style: TextStyle(color: _muted),
+              style: TextStyle(color: colors.onSurfaceVariant),
             ),
           )
         else
@@ -120,31 +129,40 @@ class ProfileScreen extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     device.name,
-                    style: const TextStyle(
-                      color: _ink,
+                    style: TextStyle(
+                      color: colors.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  subtitle: const Padding(
-                    padding: EdgeInsets.only(top: 6),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 6),
                     child: Row(
                       children: [
-                        Icon(Icons.circle, color: _blue, size: 10),
-                        SizedBox(width: 8),
-                        Text('Registered', style: TextStyle(color: _muted)),
+                        const Icon(Icons.circle, color: _blue, size: 10),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Registered',
+                          style: TextStyle(color: colors.onSurfaceVariant),
+                        ),
                       ],
                     ),
                   ),
-                  trailing: const Icon(Icons.chevron_right, color: _muted),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: colors.onSurfaceVariant,
+                  ),
                   onTap: () => showDialog<void>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      backgroundColor: Colors.white,
-                      title: Text(device.name),
+                      backgroundColor: colors.surfaceContainerHigh,
+                      title: Text(
+                        device.name,
+                        style: TextStyle(color: colors.onSurface),
+                      ),
                       content: SelectableText(
                         'Device ID\n${device.id}',
-                        style: const TextStyle(color: _ink),
+                        style: TextStyle(color: colors.onSurface),
                       ),
                       actions: [
                         TextButton(
@@ -159,27 +177,67 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 14),
-        const _SectionTitle(
-          icon: Icons.notifications_none,
-          title: 'Notification Settings',
-        ),
+        const _SectionTitle(icon: Icons.palette_outlined, title: 'Appearance'),
         const SizedBox(height: 10),
-        const _ProfileCard(
-          child: ListTile(
+        _ProfileCard(
+          child: SwitchListTile.adaptive(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              'Person detection alerts',
+              'Dark mode',
               style: TextStyle(
-                color: _ink,
+                color: colors.onSurface,
                 fontSize: 17,
                 fontWeight: FontWeight.w500,
               ),
             ),
             subtitle: Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                darkMode ? 'Dark theme is on' : 'Use a darker app appearance',
+                style: TextStyle(color: colors.onSurfaceVariant),
+              ),
+            ),
+            secondary: Icon(
+              darkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              color: colors.primary,
+            ),
+            value: darkMode,
+            onChanged: (enabled) async {
+              try {
+                await onThemeChanged(enabled);
+              } catch (error) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Could not save theme setting: $error'),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+        const SizedBox(height: 14),
+        const _SectionTitle(
+          icon: Icons.notifications_none,
+          title: 'Notification Settings',
+        ),
+        const SizedBox(height: 10),
+        _ProfileCard(
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Person detection alerts',
+              style: TextStyle(
+                color: colors.onSurface,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 5),
               child: Text(
                 'Push notifications are not configured yet',
-                style: TextStyle(color: _muted),
+                style: TextStyle(color: colors.onSurfaceVariant),
               ),
             ),
             trailing: Switch(value: false, onChanged: null),
@@ -219,8 +277,8 @@ class _ProfileCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: _border),
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(24),
         boxShadow: const [
           BoxShadow(
@@ -230,7 +288,7 @@ class _ProfileCard extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: Material(color: Colors.transparent, child: child),
     );
   }
 }
@@ -245,12 +303,16 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: _muted, size: 20),
+        Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          size: 20,
+        ),
         const SizedBox(width: 10),
         Text(
           title,
-          style: const TextStyle(
-            color: _muted,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 17,
             fontWeight: FontWeight.w600,
           ),

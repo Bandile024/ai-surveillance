@@ -46,9 +46,16 @@ class DeviceEvent {
 }
 
 class EventsDashboard extends StatefulWidget {
-  const EventsDashboard({super.key, required this.client});
+  const EventsDashboard({
+    super.key,
+    required this.client,
+    required this.darkMode,
+    required this.onThemeChanged,
+  });
 
   final SupabaseClient client;
+  final bool darkMode;
+  final Future<void> Function(bool enabled) onThemeChanged;
 
   @override
   State<EventsDashboard> createState() => _EventsDashboardState();
@@ -197,7 +204,7 @@ class _EventsDashboardState extends State<EventsDashboard> {
     final selectedTitle = _activeCamera?.name ?? titles[_selectedTab];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: _activeCamera == null
             ? null
@@ -208,8 +215,8 @@ class _EventsDashboardState extends State<EventsDashboard> {
               ),
         title: Text(
           selectedTitle,
-          style: const TextStyle(
-            color: Color(0xFF111827),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -239,7 +246,12 @@ class _EventsDashboardState extends State<EventsDashboard> {
               ),
             )
           : _selectedTab == 3
-          ? ProfileScreen(client: widget.client, devices: _devices)
+          ? ProfileScreen(
+              client: widget.client,
+              devices: _devices,
+              darkMode: widget.darkMode,
+              onThemeChanged: widget.onThemeChanged,
+            )
           : _selectedTab == 0
           ? _HomeTab(
               devices: _devices,
@@ -270,14 +282,16 @@ class _EventsDashboardState extends State<EventsDashboard> {
                           _ => 'Intrusion alerts',
                         },
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: const Color(0xFF111827),
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       const Spacer(),
                       Text(
                         '${visibleEvents.length} loaded',
-                        style: const TextStyle(color: Color(0xFF64748B)),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -294,10 +308,12 @@ class _EventsDashboardState extends State<EventsDashboard> {
                   const SizedBox(height: 12),
                   if (_error != null)
                     Card(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surfaceContainerLow,
                       surfaceTintColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.outlineVariant,
+                        ),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ListTile(
@@ -305,13 +321,19 @@ class _EventsDashboardState extends State<EventsDashboard> {
                           Icons.error_outline,
                           color: Color(0xFFB42318),
                         ),
-                        title: const Text(
+                        title: Text(
                           'Unable to load dashboard',
-                          style: TextStyle(color: Color(0xFF111827)),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                         subtitle: Text(
                           _error!,
-                          style: const TextStyle(color: Color(0xFF64748B)),
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
                         ),
                         trailing: IconButton(
                           tooltip: 'Retry',
@@ -372,9 +394,9 @@ class _EventsDashboardState extends State<EventsDashboard> {
             if (index == 1) _filter = 'INTRUSION';
           });
         },
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: const Color(0xFFE8F1FF),
+        indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
         elevation: 8,
         destinations: const [
           NavigationDestination(
@@ -408,13 +430,17 @@ class _EventsDashboardState extends State<EventsDashboard> {
       label: Text(label),
       selected: selected,
       showCheckmark: false,
-      backgroundColor: Colors.white,
-      selectedColor: const Color(0xFFE8F1FF),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      selectedColor: Theme.of(context).colorScheme.primaryContainer,
       side: BorderSide(
-        color: selected ? const Color(0xFF2488F5) : const Color(0xFFE2E8F0),
+        color: selected
+            ? const Color(0xFF2488F5)
+            : Theme.of(context).colorScheme.outlineVariant,
       ),
       labelStyle: TextStyle(
-        color: selected ? const Color(0xFF1D4ED8) : const Color(0xFF475569),
+        color: selected
+            ? const Color(0xFF1D4ED8)
+            : Theme.of(context).colorScheme.onSurfaceVariant,
         fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
       ),
       onSelected: (selected) =>
@@ -451,18 +477,20 @@ class _HomeTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
       children: [
-        const Text(
+        Text(
           'Welcome back',
           style: TextStyle(
-            color: Color(0xFF111827),
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 27,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 5),
-        const Text(
+        Text(
           'Your security overview at a glance.',
-          style: TextStyle(color: Color(0xFF64748B)),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 20),
         Row(
@@ -474,7 +502,7 @@ class _HomeTab extends StatelessWidget {
                 icon: Icons.videocam_outlined,
                 color: status?.cameraConnected == true
                     ? const Color(0xFF138A54)
-                    : const Color(0xFF64748B),
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(width: 10),
@@ -491,11 +519,11 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 22),
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'Your camera',
                 style: TextStyle(
-                  color: Color(0xFF111827),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 19,
                   fontWeight: FontWeight.w700,
                 ),
@@ -506,11 +534,13 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 10),
         Card(
           clipBehavior: Clip.antiAlias,
-          color: const Color(0xFF111827),
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           surfaceTintColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(22),
-            side: const BorderSide(color: Color(0xFFE2E8F0)),
+            side: BorderSide(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -532,7 +562,7 @@ class _HomeTab extends StatelessWidget {
                           child: _CameraCardDetail(
                             label: 'Camera name',
                             value: camera.name,
-                            color: const Color(0xFF111827),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -544,7 +574,9 @@ class _HomeTab extends StatelessWidget {
                                 : 'Offline',
                             color: status?.cameraConnected == true
                                 ? const Color(0xFF138A54)
-                                : const Color(0xFF64748B),
+                                : Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -592,14 +624,19 @@ class _HomeTab extends StatelessWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.add, color: Color(0xFF111827)),
-            label: const Text(
+            icon: Icon(
+              Icons.add,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            label: Text(
               'Add camera',
-              style: TextStyle(color: Color(0xFF111827)),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
           ),
@@ -656,11 +693,11 @@ class _CameraDetail extends StatelessWidget {
         const SizedBox(height: 14),
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'Live camera',
                 style: TextStyle(
-                  color: Color(0xFF111827),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                   fontSize: 19,
                 ),
@@ -670,15 +707,15 @@ class _CameraDetail extends StatelessWidget {
               label: status?.cameraConnected == true ? 'LIVE' : 'OFFLINE',
               color: status?.cameraConnected == true
                   ? const Color(0xFF138A54)
-                  : const Color(0xFF64748B),
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ],
         ),
         const SizedBox(height: 18),
-        const Text(
+        Text(
           'Security mode',
           style: TextStyle(
-            color: Color(0xFF111827),
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -708,27 +745,34 @@ class _CameraDetail extends StatelessWidget {
           ],
         ),
         if (status?.cameraConnected != true)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(
               'Start the Python engine on this computer to enable live view and mode controls.',
-              style: TextStyle(color: Color(0xFF64748B)),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         const SizedBox(height: 22),
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'Recent intrusion events',
                 style: TextStyle(
-                  color: Color(0xFF111827),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
                 ),
               ),
             ),
-            Text(camera.name, style: const TextStyle(color: Color(0xFF64748B))),
+            Text(
+              camera.name,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -767,7 +811,10 @@ class _CameraCardDetail extends StatelessWidget {
     children: [
       Text(
         label,
-        style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          fontSize: 12,
+        ),
       ),
       const SizedBox(height: 3),
       Text(
@@ -797,9 +844,9 @@ class _HomeMetric extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
-      color: const Color(0xFFF8FAFC),
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(17),
-      border: Border.all(color: const Color(0xFFE2E8F0)),
+      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -816,8 +863,8 @@ class _HomeMetric extends StatelessWidget {
         Text(
           label,
           maxLines: 1,
-          style: const TextStyle(
-            color: Color(0xFF64748B),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             fontSize: 10,
             fontWeight: FontWeight.w600,
           ),
@@ -896,8 +943,12 @@ class _ModeButton extends StatelessWidget {
     onPressed: busy ? null : onPressed,
     style: OutlinedButton.styleFrom(
       foregroundColor: color,
-      side: BorderSide(color: selected ? color : const Color(0xFFE2E8F0)),
-      backgroundColor: selected ? color.withValues(alpha: 0.08) : Colors.white,
+      side: BorderSide(
+        color: selected ? color : Theme.of(context).colorScheme.outlineVariant,
+      ),
+      backgroundColor: selected
+          ? color.withValues(alpha: 0.08)
+          : Theme.of(context).colorScheme.surface,
       padding: const EdgeInsets.symmetric(vertical: 14),
     ),
     child: busy && selected
@@ -925,16 +976,19 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFEAF3FF), Color(0xFFF8FAFC)],
+            colors: [
+              Theme.of(context).colorScheme.surfaceContainerHigh,
+              Theme.of(context).colorScheme.surfaceContainerLow,
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -943,14 +997,14 @@ class _SummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.shield_outlined, color: Color(0xFF2488F5)),
-                SizedBox(width: 8),
+                const Icon(Icons.shield_outlined, color: Color(0xFF2488F5)),
+                const SizedBox(width: 8),
                 Text(
                   'MONITORING OVERVIEW',
                   style: TextStyle(
-                    color: Color(0xFF475569),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -986,14 +1040,15 @@ class _SummaryValue extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: const Color(0xFF111827),
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w700,
             ),
           ),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall
-                ?.copyWith(color: const Color(0xFF64748B)),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -1020,10 +1075,10 @@ class _EventCard extends StatelessWidget {
     };
 
     return Card(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
@@ -1038,8 +1093,8 @@ class _EventCard extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            color: Color(0xFF111827),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -1048,11 +1103,16 @@ class _EventCard extends StatelessWidget {
           child: Text(
             '${event.deviceName}  ·  ${_formatDate(event.occurredAt)}'
             '${event.snapshotPath == null ? '' : '\nSnapshot available'}',
-            style: const TextStyle(color: Color(0xFF64748B)),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
         isThreeLine: event.snapshotPath != null,
-        trailing: const Icon(Icons.chevron_right, color: Color(0xFF64748B)),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -1093,16 +1153,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     final isIntrusion = event.type == 'INTRUSION';
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(title: const Text('Event details')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
             surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
@@ -1125,7 +1187,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         child: Text(
                           isIntrusion ? 'Intrusion detected' : event.type,
                           style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(color: const Color(0xFF111827)),
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                         ),
                       ),
                     ],
@@ -1146,7 +1210,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             Text(
               'Snapshot',
               style: Theme.of(context).textTheme.titleLarge
-                  ?.copyWith(color: const Color(0xFF111827)),
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
             const SizedBox(height: 10),
             ClipRRect(
@@ -1186,8 +1250,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             const SizedBox(height: 8),
             Text(
               'Private image access link; it expires after 10 minutes.',
-              style: Theme.of(context).textTheme.bodySmall
-                  ?.copyWith(color: const Color(0xFF64748B)),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ] else if (isIntrusion) ...[
             const SizedBox(height: 16),
@@ -1200,14 +1265,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           Text(
             'Event data',
             style: Theme.of(context).textTheme.titleLarge
-                ?.copyWith(color: const Color(0xFF111827)),
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(height: 10),
           Card(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
             surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
@@ -1241,14 +1308,15 @@ class _DetailRow extends StatelessWidget {
             width: 82,
             child: Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall
-                  ?.copyWith(color: const Color(0xFF64748B)),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Expanded(
             child: SelectableText(
               value,
-              style: const TextStyle(color: Color(0xFF111827)),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
         ],
@@ -1267,18 +1335,22 @@ class _SnapshotMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF8FAFC),
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       constraints: const BoxConstraints(minHeight: 180),
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 36, color: const Color(0xFF64748B)),
+          Icon(
+            icon,
+            size: 36,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           const SizedBox(height: 10),
           Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Color(0xFF111827)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
           if (action != null) action!,
         ],
@@ -1309,7 +1381,7 @@ class _EmptyState extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: const Color(0xFF111827),
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1317,7 +1389,9 @@ class _EmptyState extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Color(0xFF64748B)),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
