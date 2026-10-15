@@ -151,3 +151,17 @@
 2026-10-13 23:31:49,927 | INFO    | Supabase event delivery enabled.
 2026-10-13 23:31:50,053 | INFO    | Local app API listening at http://127.0.0.1:8765
 2026-10-13 23:31:56,856 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-14 11:45:01,660 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-14 11:45:08,971 | INFO    | Supabase event delivery enabled.
+2026-10-14 11:45:09,047 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-14 11:45:15,679 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-15 10:09:25,444 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-15 10:09:34,157 | INFO    | Supabase event delivery enabled.
+2026-10-15 10:09:34,210 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-15 10:09:38,956 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-15 10:09:56,415 | INFO    | [SYSTEM] System stopped
+2026-10-15 10:11:19,346 | INFO    | Loading YOLO model (first run downloads the weights)...
+2026-10-15 10:11:23,446 | INFO    | Supabase event delivery enabled.
+2026-10-15 10:11:23,482 | INFO    | Local app API listening at http://127.0.0.1:8765
+2026-10-15 10:11:26,956 | INFO    | [SYSTEM] System started in SAFE mode
+2026-10-15 10:34:38,193 | INFO    | [SYSTEM] System stopped

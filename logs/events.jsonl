@@ -89,3 +89,8 @@
 {"timestamp": "2026-10-13T21:12:13.962+00:00", "type": "INTRUSION", "message": "Intrusion detected: 1 person(s), confidence 86%", "alert_id": "2e563fbb-50d0-4fbe-b9a6-0bf8f32823f1", "person_count": 1, "max_confidence": 0.864, "snapshot": "C:\\Users\\BandileNgwenya\\PycharmProjects\\ai-surveillance\\intrusions\\intrusion_20261013_231213_770.jpg"}
 {"timestamp": "2026-10-13T21:12:18.385+00:00", "type": "MODE_CHANGE", "message": "Mode changed GUARD -> SAFE", "event_id": "09fcd78e-5937-4a62-b3fb-62051599df6c", "old_mode": "GUARD", "new_mode": "SAFE", "source": "flutter_app"}
 {"timestamp": "2026-10-13T21:21:13.707+00:00", "type": "SYSTEM", "message": "System stopped"}
+{"timestamp": "2026-10-14T09:45:15.679+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-15T08:09:38.955+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-15T08:09:56.415+00:00", "type": "SYSTEM", "message": "System stopped"}
+{"timestamp": "2026-10-15T08:11:26.956+00:00", "type": "SYSTEM", "message": "System started in SAFE mode"}
+{"timestamp": "2026-10-15T08:34:38.193+00:00", "type": "SYSTEM", "message": "System stopped"}
