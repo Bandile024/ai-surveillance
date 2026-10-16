@@ -34,8 +34,9 @@ root in PowerShell, run:
 The launcher resolves Flutter dependencies only on first setup or after
 dependency manifest changes, then starts the Python engine and opens the app
 in Chrome while the engine model loads. The feed appears when the engine is
-ready. Close the `flutter run` session to stop both. If PowerShell blocks
-script execution, use:
+ready. It pins Chrome to port 8766 and allows only that exact browser origin to
+access the loopback engine API. Close the `flutter run` session to stop both.
+If PowerShell blocks script execution, use:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\run_sentinel.ps1
@@ -70,19 +71,26 @@ Redirect URLs** in the Supabase dashboard.
 The Home and live-camera screens display the annotated stream produced by the
 Python YOLO engine; Flutter does not open a second webcam. When starting the
 components separately, start the engine on the same computer before launching
-the app:
+the app. Its API listens only on `127.0.0.1:8765`; the app polls its status,
+displays its MJPEG stream, and can request SAFE/GUARD mode changes. Keep the
+API bound to loopback. A browser app can access it only when its exact origin
+is allowlisted. Pin Flutter to a port and allow that origin:
 
 ```powershell
-cd ..
-python main.py --headless
+python main.py --headless --api-allowed-origin http://localhost:8766
 ```
 
-Then run the Flutter app in Chrome as above. The local engine API listens only
-on `127.0.0.1:8765`; the app polls its status, displays its MJPEG stream, and
-can request SAFE/GUARD mode changes. Keep the API bound to loopback. A browser
-or app on another device cannot use this local-only feed. To use another local
-port, start the engine with `--api-port PORT` and pass the matching URL to
-Flutter with `--dart-define=ENGINE_API_URL=http://127.0.0.1:PORT`.
+Then, from `sentinel_ai/`, run Flutter with
+`flutter run -d chrome --web-port=8766` (plus any needed Supabase defines).
+If you use another web port, specify its exact `http://localhost:PORT` origin.
+A browser or app on another device cannot use this loopback-only feed. To
+change the engine API port, start it with `--api-port PORT` and pass the
+matching URL to Flutter with
+`--dart-define=ENGINE_API_URL=http://127.0.0.1:PORT`.
+
+The API still has no authentication for non-browser local clients. Exact-origin
+CORS checks help prevent unrelated browser pages from controlling it; they do
+not protect against untrusted software already running on the computer.
 
 ## Dashboard behavior
 

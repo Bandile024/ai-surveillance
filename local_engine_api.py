@@ -112,9 +112,26 @@ class LocalEngineServer:
         bridge: LocalEngineBridge,
         host: str = "127.0.0.1",
         port: int = 8765,
+        allowed_origins: Optional[set[str]] = None,
     ) -> None:
         if host not in {"127.0.0.1", "::1", "localhost"}:
             raise ValueError("The local engine API must bind to loopback only.")
+        self.allowed_origins = allowed_origins or set()
+        for origin in self.allowed_origins:
+            parsed_origin = urlsplit(origin)
+            if (
+                parsed_origin.scheme != "http"
+                or parsed_origin.hostname not in {"localhost", "127.0.0.1", "::1"}
+                or parsed_origin.path
+                or parsed_origin.query
+                or parsed_origin.fragment
+                or parsed_origin.username
+                or parsed_origin.password
+                or not parsed_origin.netloc
+            ):
+                raise ValueError(
+                    "Allowed browser origins must be exact HTTP loopback origins."
+                )
         self.bridge = bridge
 
         class Handler(BaseHTTPRequestHandler):
@@ -124,12 +141,7 @@ class LocalEngineServer:
                 origin = self.headers.get("Origin")
                 if not origin:
                     return None
-                parsed = urlsplit(origin)
-                if parsed.scheme == "http" and parsed.hostname in {
-                    "localhost",
-                    "127.0.0.1",
-                    "::1",
-                }:
+                if origin in allowed_origins:
                     return origin
                 return ""
 
@@ -242,6 +254,7 @@ class LocalEngineServer:
             def log_message(self, format: str, *args: Any) -> None:
                 return
 
+        allowed_origins = self.allowed_origins
         self._server = ThreadingHTTPServer((host, port), Handler)
         self._server.daemon_threads = True
         self.host, self.port = self._server.server_address[:2]

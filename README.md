@@ -42,8 +42,9 @@ engine loads. It resolves Flutter packages only on first setup or after
 `pubspec.yaml`/`pubspec.lock` changes. Add the publishable key to that ignored
 local file if it is not already there. Keep using the Supabase **publishable**
 key; never use the `service_role` key in the app. Closing `flutter run` also
-requests a clean engine shutdown. If PowerShell blocks the script due to
-execution policy, run:
+requests a clean engine shutdown. The launcher pins the Flutter web server to
+a fixed local port and allows only that exact origin to access the engine API.
+If PowerShell blocks the script due to execution policy, run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\run_sentinel.ps1
@@ -176,8 +177,19 @@ The local Flutter app can view the annotated camera stream and request SAFE/GUAR
 mode changes over a loopback-only API (`127.0.0.1:8765`). Start the engine first,
 then run the Flutter app from `sentinel_ai/`; `--headless` avoids showing a
 second preview window. This API has no authentication and must not be exposed
-outside the local machine. Mode-change events identify whether the change came
-from the keyboard or the Flutter app.
+outside the local machine. The combined launcher allows browser access only
+from its exact local Flutter origin. To run the engine and Flutter separately,
+allowlist the same fixed web origin when starting the engine:
+
+```powershell
+python main.py --headless --api-allowed-origin http://localhost:8766
+```
+
+Then start Flutter with `--web-port=8766`. If you choose another port, use its
+exact `http://localhost:PORT` origin in both commands. Native local programs
+are not authenticated by the browser-origin check, so this does not protect
+against untrusted software already running on the computer. Mode-change events
+identify whether the change came from the keyboard or the Flutter app.
 
 ### Supabase setup
 
@@ -225,6 +237,47 @@ The integration files are under `supabase/`:
    included for future Flutter setup but is not used by the engine. Never put
    the Supabase `service_role` key in this file or the Flutter app.
 
+To rotate a device token, disable its existing credential first so the old
+token stops working:
+
+```sql
+update public.device_credentials
+set is_active = false
+where device_id = 'YOUR_DEVICE_UUID';
+```
+
+Generate a replacement in PowerShell without printing it:
+
+```powershell
+$env:SUPABASE_DEVICE_TOKEN = python -c "import secrets; print(secrets.token_urlsafe(48))"
+$newTokenHash = python -c "import hashlib, os; print(hashlib.sha256(os.environ['SUPABASE_DEVICE_TOKEN'].encode()).hexdigest())"
+```
+
+Write the replacement directly into the ignored root `.env.local` without
+printing it:
+
+```powershell
+python -c "import os, pathlib; p=pathlib.Path('.env.local'); s=p.read_text(encoding='utf-8') if p.exists() else ''; lines=[line for line in s.splitlines() if not line.startswith('SUPABASE_DEVICE_TOKEN=')]; lines.append('SUPABASE_DEVICE_TOKEN='+os.environ['SUPABASE_DEVICE_TOKEN']); p.write_text('\n'.join(lines)+'\n', encoding='utf-8')"
+```
+
+Then activate its digest in Supabase (paste `$newTokenHash` into the SQL
+editor):
+
+```sql
+update public.device_credentials
+set token_hash = 'YOUR_NEW_SHA256_HEX_DIGEST', is_active = true
+where device_id = 'YOUR_DEVICE_UUID';
+```
+
+Restart the engine after updating `.env.local`, then clear the temporary
+PowerShell variables with `Remove-Item Env:SUPABASE_DEVICE_TOKEN` and
+`Remove-Variable newTokenHash`. Failed uploads stay queued locally and retry.
+Never paste a raw token into chat, logs, or source control. If a token may have
+been exposed, disable it immediately before provisioning its replacement.
+The ignored `.env.local` is not encrypted; restrict access to your Windows user
+account and do not include it in backups or cloud-synced folders you do not
+trust.
+
 The Edge Function uses Supabase's server-side `SUPABASE_SERVICE_ROLE_KEY`; it
 validates the device token hash before accepting events. The service-role key
 must never be configured on the engine or Flutter app. The publishable key is
@@ -243,6 +296,12 @@ control is limited to this machine's loopback API.
 
 To disable cloud delivery, leave both environment variables unset. If one is
 set without the other, startup fails with a configuration error.
+
+Runtime logs and intrusion snapshots can contain sensitive surveillance data.
+Keep them local and do not commit or share them. Ignore rules prevent new
+runtime files from being added, but removing tracked logs does not erase prior
+copies from Git history; review repository visibility and history if these
+files were pushed.
 
 ## 9. Troubleshooting
 

@@ -8,7 +8,11 @@ from local_engine_api import LocalEngineBridge, LocalEngineServer
 class LocalEngineApiTests(unittest.TestCase):
     def setUp(self) -> None:
         self.bridge = LocalEngineBridge()
-        self.server = LocalEngineServer(self.bridge, port=0)
+        self.server = LocalEngineServer(
+            self.bridge,
+            port=0,
+            allowed_origins={"http://localhost:53211"},
+        )
         self.server.start()
 
     def tearDown(self) -> None:
@@ -85,6 +89,19 @@ class LocalEngineApiTests(unittest.TestCase):
         self.assertTrue(self.bridge.take_shutdown_request())
         self.assertFalse(self.bridge.take_shutdown_request())
 
+    def test_unlisted_local_browser_origin_is_rejected(self) -> None:
+        connection = http.client.HTTPConnection("127.0.0.1", self.server.port)
+        connection.request(
+            "GET",
+            "/api/status",
+            headers={"Origin": "http://localhost:53212"},
+        )
+        response = connection.getresponse()
+        response.read()
+        connection.close()
+
+        self.assertEqual(response.status, 403)
+
     def test_non_local_browser_origin_is_rejected(self) -> None:
         connection = http.client.HTTPConnection("127.0.0.1", self.server.port)
         connection.request(
@@ -129,6 +146,13 @@ class LocalEngineApiTests(unittest.TestCase):
     def test_api_refuses_to_bind_to_a_network_interface(self) -> None:
         with self.assertRaises(ValueError):
             LocalEngineServer(self.bridge, host="0.0.0.0", port=8765)
+
+    def test_api_rejects_non_loopback_allowed_origins(self) -> None:
+        with self.assertRaises(ValueError):
+            LocalEngineServer(
+                self.bridge,
+                allowed_origins={"https://untrusted.example"},
+            )
 
 
 if __name__ == "__main__":

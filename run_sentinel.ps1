@@ -3,6 +3,7 @@ $projectRoot = $PSScriptRoot
 $flutterRoot = Join-Path $projectRoot 'sentinel_ai'
 $pythonPath = Join-Path $projectRoot 'venv\Scripts\python.exe'
 $localEnvPath = Join-Path $projectRoot '.env.local'
+$flutterWebPort = 8766
 $engineProcess = $null
 $exitCode = 0
 
@@ -79,7 +80,12 @@ try {
     Write-Host 'Starting the AI engine...'
     $engineProcess = Start-Process `
         -FilePath $pythonPath `
-        -ArgumentList @('main.py', '--headless') `
+        -ArgumentList @(
+            'main.py',
+            '--headless',
+            '--api-allowed-origin',
+            "http://localhost:$flutterWebPort"
+        ) `
         -WorkingDirectory $projectRoot `
         -NoNewWindow `
         -PassThru
@@ -90,6 +96,7 @@ try {
         & $flutterCommand.Source run `
             --no-pub `
             -d chrome `
+            "--web-port=$flutterWebPort" `
             "--dart-define=SUPABASE_URL=$supabaseUrl" `
             "--dart-define=SUPABASE_PUBLISHABLE_KEY=$publishableKey"
         $exitCode = $LASTEXITCODE

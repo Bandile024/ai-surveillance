@@ -1352,7 +1352,7 @@ class _SnapshotMessage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
-          if (action != null) action!,
+          ?action,
         ],
       ),
     );

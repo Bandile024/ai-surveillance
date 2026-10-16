@@ -156,7 +156,11 @@ class SurveillanceApp:
     # ------------------------------------------------------------------- run
     def run(self) -> None:
         bridge = LocalEngineBridge()
-        server = LocalEngineServer(bridge, port=self.args.api_port)
+        server = LocalEngineServer(
+            bridge,
+            port=self.args.api_port,
+            allowed_origins=set(self.args.api_allowed_origin),
+        )
         cap: Optional[cv2.VideoCapture] = None
         failures, last = 0, time.time()
 
@@ -325,6 +329,15 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=8765,
         help="loopback app API port (default 8765)",
+    )
+    p.add_argument(
+        "--api-allowed-origin",
+        action="append",
+        default=[],
+        help=(
+            "exact HTTP loopback browser origin allowed to access the local API; "
+            "may be repeated"
+        ),
     )
     p.add_argument(
         "--headless",
